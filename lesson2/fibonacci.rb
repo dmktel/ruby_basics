@@ -1,8 +1,9 @@
-fibonacci = [0, 1]
+fibonacci = [0]
+fib = 1
 
-loop do
-  fib = fibonacci[-1] + fibonacci[-2]
-  break if fib >= 100
+while fib < 100
   fibonacci.push(fib)
+  fib = fibonacci[-1] + fibonacci[-2]
 end
+
 puts fibonacci

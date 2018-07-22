@@ -11,7 +11,7 @@ d = b**2 - 4 * a * c # Discriminant calculation
 if d < 0 
   puts "No solutions"
 elsif d == 0
-    x = -b / (2 * a)
+  x = -b / (2 * a)
   puts "Equation root x = #{x}"
 else
   dsqrt = Math.sqrt(d)

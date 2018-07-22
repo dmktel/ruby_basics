@@ -1,5 +1,5 @@
 puts "What's your name?"
-name = gets.to_i
+name = gets.chomp
 
 puts "What is your height in cm?"
 height = gets.to_i
