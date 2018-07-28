@@ -19,18 +19,16 @@ class Station
 
   def list_train(type = nil)
     if type
-      puts "Trains type: '#{type}' at the station #{name}: "
-      trains.each { |train| puts train.number if train.type == type }
-    else type
-      puts "Trains at the station #{name}: "
-      trains.each { |train| puts train.number }
+      trains.each { |train| train.number if train.type == type }
+    else
+      trains.each { |train| train.number }
     end
   end
 
 end
 
 class Route
-  attr_accessor :stations, :from, :to
+  attr_reader :stations, :from, :to
 
   def initialize(from, to)
     @stations = [from, to]
@@ -38,7 +36,7 @@ class Route
   end
 
   def add_station(station)
-    self.stations.insert(-2, station)
+    stations.insert(-2, station)
     puts "The station #{station.name} was added for route '#{stations.first.name} - #{stations.last.name}'"
   end
 
@@ -46,32 +44,38 @@ class Route
     if [stations.first, stations.last].include?(station)
       puts "You can't remove first and last stations"
     else
-      self.stations.delete(station)
+      stations.delete(station)
       puts "The station #{station.name} was removed from route '#{stations.first.name} - #{stations.last.name}'"
     end
   end
 
   def list_stations
     puts "The route '#{stations.first.name} - #{stations.last.name}' include stations: "
-    self.stations.each { |station| puts "#{station.name}"}
+    stations.each { |station| puts "#{station.name}"}
   end
 
 end
 
 class Train
-  attr_accessor :speed, :number, :wagon_count, :station, :route
-  attr_reader :type
+  attr_reader :speed, :number, :wagon_count, :route, :type, :station, :index
 
   def initialize(number, type, wagon_count)
     @number = number
     @speed = 0
     @type = type
     @wagon_count = wagon_count
+    @station = nil
+    @index = 0
     puts "Train #{number} has been created, type - #{type}, wagons - #{wagon_count}"
   end
 
-  def stop
-    self.speed = 0
+  def accellerate (speed)
+    @speed = @speed + speed if @speed <= 70
+    puts @speed
+  end
+
+  def brake (speed)
+    @speed = @speed - speed if @speed >  0
   end
 
   def add_wagon
@@ -95,37 +99,54 @@ class Train
   end
 
   def take_route(route)
-    self.route = route
+    @route = route
     route.stations.first.get_train(self)
+    @station = route.stations.first
     puts "Route '#{route.stations.first.name} - #{route.stations.last.name}' has been added for train #{number}"
   end
 
-  def go_to(station)
+  def forward
     if route.nil?
       Puts "Route is not set!"
-    elsif route.stations.include?(station)
-      @station.send_train(self) if @station
-      @station = station
-      station.get_train(self)
     else
-      puts "There isn't station #{station.name} at the route of train #{number}"
+      @index += 1 if @index < route.stations.size - 1
     end
   end
 
-  def train_location
+  def back
     if route.nil?
       Puts "Route is not set!"
     else
-      station_index = route.stations.index(station)
-      current_station = station.name
-      prev_station = route.stations[station_index - 1].name if station_index != 0
-      next_station = route.stations[station_index + 1].name if station_index != route.stations.size - 1
-      puts "Current station: #{current_station}, previous station: #{prev_station}, next station: #{next_station}"
+      @index -= 1 if @index > 0
+    end
+  end
+
+  def current_station
+    if route.nil?
+      Puts "Route is not set!"
+    else
+      @station = route.stations[@index]
+    end
+  end
+
+  def next_station
+    if route.nil?
+      Puts "Route is not set!"
+    else
+      @station = route.stations[@index + 1] if @index < route.stations.size - 1
+    end
+  end
+
+  def prev_station
+    if route.nil?
+      Puts "Route is not set!"
+    else
+      @station = route.stations[@index - 1] if @index > 0
     end
   end
 
 end
-
+=begin
 toronto = Station.new("Toronto")
 ottawa = Station.new("Ottawa")
 montreal = Station.new("Montreal")
@@ -134,3 +155,4 @@ route_tm.add_station(ottawa)
 train1 = Train.new("A", "pass", 1)
 train2 = Train.new("B", "cargo", 2)
 train1.take_route(route_tm)
+=end
