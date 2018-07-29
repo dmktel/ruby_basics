@@ -4,7 +4,6 @@ class Station
   def initialize (name)
     @name = name
     @trains = []
-    puts "Station #{name} has been created"
   end
 
   def get_train(train)
@@ -32,12 +31,10 @@ class Route
 
   def initialize(from, to)
     @stations = [from, to]
-    puts "Route '#{stations.first.name} - #{stations.last.name}' has been created"
   end
 
   def add_station(station)
     stations.insert(-2, station)
-    puts "The station #{station.name} was added for route '#{stations.first.name} - #{stations.last.name}'"
   end
 
   def remove_station(station)
@@ -45,36 +42,33 @@ class Route
       puts "You can't remove first and last stations"
     else
       stations.delete(station)
-      puts "The station #{station.name} was removed from route '#{stations.first.name} - #{stations.last.name}'"
     end
   end
 
   def list_stations
     puts "The route '#{stations.first.name} - #{stations.last.name}' include stations: "
-    stations.each { |station| puts "#{station.name}"}
+    stations.each { |station| puts station.name}
   end
 
 end
 
 class Train
-  attr_reader :speed, :number, :wagon_count, :route, :type, :station, :index
+  attr_reader :speed, :number, :wagon_count, :route, :type
 
   def initialize(number, type, wagon_count)
     @number = number
     @speed = 0
     @type = type
     @wagon_count = wagon_count
-    @station = nil
-    @index = 0
     puts "Train #{number} has been created, type - #{type}, wagons - #{wagon_count}"
   end
 
-  def accellerate (speed)
+  def accellerate(speed)
     @speed = @speed + speed if @speed <= 70
     puts @speed
   end
 
-  def brake (speed)
+  def brake(speed)
     @speed = @speed - speed if @speed >  0
   end
 
@@ -102,14 +96,19 @@ class Train
     @route = route
     route.stations.first.get_train(self)
     @station = route.stations.first
+    @current_station_index = 0
     puts "Route '#{route.stations.first.name} - #{route.stations.last.name}' has been added for train #{number}"
   end
 
   def forward
     if route.nil?
       Puts "Route is not set!"
+    elsif next_station
+      current_station.send_train(self)
+      next_station.get_train(self)
+      @current_station_index += 1 if @current_station_index < route.stations.size - 1
     else
-      @index += 1 if @index < route.stations.size - 1
+      puts "There isn't station #{station.name} at the route"
     end
   end
 
@@ -117,7 +116,9 @@ class Train
     if route.nil?
       Puts "Route is not set!"
     else
-      @index -= 1 if @index > 0
+      current_station.send_train(self)
+      prev_station.get_train(self)
+      @current_station_index -= 1 if @current_station_index > 0
     end
   end
 
@@ -125,7 +126,7 @@ class Train
     if route.nil?
       Puts "Route is not set!"
     else
-      @station = route.stations[@index]
+      @station = route.stations[@current_station_index]
     end
   end
 
@@ -133,7 +134,7 @@ class Train
     if route.nil?
       Puts "Route is not set!"
     else
-      @station = route.stations[@index + 1] if @index < route.stations.size - 1
+      @station = route.stations[@current_station_index + 1] if @current_station_index < route.stations.size - 1
     end
   end
 
@@ -141,7 +142,7 @@ class Train
     if route.nil?
       Puts "Route is not set!"
     else
-      @station = route.stations[@index - 1] if @index > 0
+      @station = route.stations[@current_station_index - 1] if @current_station_index > 0
     end
   end
 
