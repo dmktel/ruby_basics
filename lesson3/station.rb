@@ -8,12 +8,10 @@ class Station
 
   def get_train(train)
     @trains << train
-    puts "The train #{train.number} arrived at the station #{name}"
   end
 
   def send_train(train)
     @trains.delete(train)
-    puts "The train #{train.number} left from the station #{name}"
   end
 
   def list_train(type = nil)
@@ -60,12 +58,10 @@ class Train
     @speed = 0
     @type = type
     @wagon_count = wagon_count
-    puts "Train #{number} has been created, type - #{type}, wagons - #{wagon_count}"
   end
 
   def accellerate(speed)
     @speed = @speed + speed if @speed <= 70
-    puts @speed
   end
 
   def brake(speed)
@@ -74,48 +70,32 @@ class Train
 
   def add_wagon
     if @speed == 0
-      self.wagon_count += 1
-      puts "One has been added to train #{number}. #{wagon_count} in train"
-    else
-      puts "Can't add wagons on moving"
+      @wagon_count = wagon_count + 1
     end
   end
 
   def remove_wagon
-    if wagon_count < 0
-      puts "Train can't be without wagons"
-    elsif @speed == 0
-      self.wagon_count -= 1
-      puts "One has been removed from train #{number}. #{wagon_count} in train"
-    else
-      puts "Can't remove wagons on moving"
+    if @speed == 0 && wagon_count > 0
+      @wagon_count = wagon_count - 1
     end
   end
 
   def take_route(route)
     @route = route
     route.stations.first.get_train(self)
-    @station = route.stations.first
     @current_station_index = 0
-    puts "Route '#{route.stations.first.name} - #{route.stations.last.name}' has been added for train #{number}"
   end
 
   def forward
-    if route.nil?
-      Puts "Route is not set!"
-    elsif next_station
+    if next_station
       current_station.send_train(self)
       next_station.get_train(self)
       @current_station_index += 1 if @current_station_index < route.stations.size - 1
-    else
-      puts "There isn't station #{station.name} at the route"
     end
   end
 
   def back
-    if route.nil?
-      Puts "Route is not set!"
-    else
+    if current_station
       current_station.send_train(self)
       prev_station.get_train(self)
       @current_station_index -= 1 if @current_station_index > 0
@@ -123,27 +103,15 @@ class Train
   end
 
   def current_station
-    if route.nil?
-      Puts "Route is not set!"
-    else
-      @station = route.stations[@current_station_index]
-    end
+    route.stations[@current_station_index]
   end
 
   def next_station
-    if route.nil?
-      Puts "Route is not set!"
-    else
-      @station = route.stations[@current_station_index + 1] if @current_station_index < route.stations.size - 1
-    end
+    route.stations[@current_station_index + 1] if @current_station_index < route.stations.size - 1
   end
 
   def prev_station
-    if route.nil?
-      Puts "Route is not set!"
-    else
-      @station = route.stations[@current_station_index - 1] if @current_station_index > 0
-    end
+    route.stations[@current_station_index - 1] if @current_station_index > 0
   end
 
 end
