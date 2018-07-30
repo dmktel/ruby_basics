@@ -95,7 +95,7 @@ class Train
   end
 
   def back
-    if current_station
+    if prev_station
       current_station.send_train(self)
       prev_station.get_train(self)
       @current_station_index -= 1 if @current_station_index > 0
