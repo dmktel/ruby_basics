@@ -1,256 +1,191 @@
-
 class Interface
 
-  CHOICE_LIST = {
-    1 => "Create station",
-    2 => "Create train",
-    3 => "Create and manage route",
-    4 => "Get route",
-    5 => "Add wagons",
-    6 => "Remove wagons",
-    7 => "Move forward train by route",
-    8 => "Move back train by route",
-    9 => "Watch stations list",
-    10 => "Watch trains list",
-    11 => "All trains list",
-    12 => "All routes list",
-    0 => "Exit"
-  }
-  CHOICE_ROUTE = {
-    1 => "Create Route",
-    2 => "Add station to route",
-    3 => "Remove station to route",
-    4 => "Return to previous menu"
-  }
-
-  PUTS_LIST = {
-    1 => "Enter your choice: ",
-    2 => "Exit! Thanks for your attention",
-    3 => "Enter first station of route: ",
-    4 => "Enter last station of route: ",
-    5 => "Enter station name you want to add to the route: ",
-    6 => "Enter station name you want to remove to the route: ",
-    7 => "Enter route number: ",
-    8 => "Enter station name: ",
-    9 => "Enter train number: ",
-    10 => "Enter train type 'cargo' or 'pass': ",
-    11 => "Error! you must enter 0..10",
-    12 => "Error, you must enter 'cargo' or 'pass'!",
-    14 => "No station or route",
-    15 => "Error! you must enter 1..4",
-    16 => "No train or route",
-    17 => "No train",
-    18 => "No wagons at train",
-    19 => "No station"
-  }
-
-  attr_reader :stations_list, :trains_list, :routes_list
+  attr_reader :stations_list, :trains_list, :routes_list, :wagons_list
   def initialize
     @stations_list = []
     @trains_list = []
     @routes_list = []
+    @wagons_list = []
   end
 
-  def run
-    CHOICE_LIST.each {|key, value| puts "#{key}: #{value}"}
-    loop do
-      print PUTS_LIST[1]
-      choice = gets.to_i
-      case choice
-      when 0
-        puts PUTS_LIST[2]
-        break
-      when 1
-        print PUTS_LIST[8]
-        name = gets.chomp
-        create_station(name)
-      when 2
-        print PUTS_LIST[9]
-        number = gets.to_i
-        print PUTS_LIST[10]
-        type = gets.chomp
-        create_train(number, type)
-      when 3
-        loop do
-          CHOICE_ROUTE.each {|key, value| puts "#{key}: #{value}"}
-          print PUTS_LIST[1]
-          choice = gets.to_i
-          case choice
-          when 1
-            print PUTS_LIST[3]
-            from = gets.chomp
-            print PUTS_LIST[4]
-            to = gets.chomp
-            create_route(from, to)
-          when 2
-            print PUTS_LIST[7]
-            route_number = gets.to_i
-            print PUTS_LIST[5]
-            name = gets.chomp
-            add_station_route(route_number, name)
-          when 3
-            print PUTS_LIST[7]
-            route_number = gets.to_i
-            print PUTS_LIST[6]
-            name = gets.chomp
-            remove_station_route(route_number, name)
-          when 4
-            break
-          else
-            puts PUTS_LIST[15]
-          end
-        end
-      when 4
-        print PUTS_LIST[9]
-        number = gets.to_i
-        print PUTS_LIST[7]
-        route_number = gets.to_i
-        get_route(number, route_number)
-      when 5
-        print PUTS_LIST[9]
-        number = gets.to_i
-        add_car(number)
-      when 6
-        print PUTS_LIST[9]
-        number = gets.to_i
-        remove_car(number)
-      when 7
-        print PUTS_LIST[9]
-        number = gets.to_i
-        move_forward(number)
-      when 8
-        print PUTS_LIST[9]
-        number = gets.to_i
-        move_back(number)
-      when 9
-        watch_stations
-      when 10
-        print PUTS_LIST[8]
-        name = gets.chomp
-        watch_trains(name)
-      when 11
-        watch_all_trains
-      when 12
-        watch_routes
-      else
-        puts PUTS_LIST[11]
-      end
-    end
+  MENU_LIST = {
+    1 => "Create and manage stations",
+    2 => "Create and manage trains",
+    3 => "Create and manage routes",
+    4 => "Create and manage wagons",
+    0 => "Exit"
+  }
+  MENU_STATIONS = {
+    1 => "Create station",
+    2 => "Station list",
+    3 => "Return to previous menu"
+  }
+  MENU_TRAINS = {
+    1 => "Create train",
+    2 => "Get route for train",
+    3 => "Move forward by route",
+    4 => "Move back by route",
+    5 => "Watch trains list at station",
+    6 => "All train list",
+    7 => "Return to previous menu"
+  }
+
+  MENU_ROUTES = {
+    1 => "Create Route",
+    2 => "Add station to route",
+    3 => "Remove station from route",
+    4 => "All routes list",
+    5 => "Return to previous menu"
+  }
+  MENU_WAGONS = {
+    1 => "Add wagon at train",
+    2 => "Remove wagon from train",
+    3 => "Train wagon counter",
+    4 => "Return to previous menu"
+  }
+
+  def menu_list
+    MENU_LIST.each {|key, value| puts "#{key}: #{value}"}
   end
 
-private
-
-  def create_station(name)
-    @stations_list << Station.new(name)
+  def menu_stations_list
+    MENU_STATIONS.each {|key, value| puts "#{key}: #{value}"}
   end
 
-  def create_train(number, type)
-    if type == "cargo"
-      @trains_list << CargoTrain.new(number)
-    elsif type == "pass"
-      @trains_list << PassTrain.new(number)
-    else
-      puts PUTS_LIST[12]
-    end
+  def menu_trains_list
+    MENU_TRAINS.each {|key, value| puts "#{key}: #{value}"}
   end
 
-  def create_route(from, to)
-    first_station = @stations_list.detect {|station| station.name == from}
-    last_station = @stations_list.detect {|station| station.name == to}
-    if from.nil? && to.nil?
-      puts PUTS_LIST[19]
-    else
-      routes_list << Route.new(first_station, last_station)
-
-    end
+  def menu_routes_list
+    MENU_ROUTES.each {|key, value| puts "#{key}: #{value}"}
   end
 
-  def add_station_route(route_number, name)
-    station = @stations_list.detect {|station| station.name == name}
-    route = @routes_list[route_number - 1]
-    if station.nil? && routes_list[route_number - 1].nil?
-      puts PUTS_LIST[14]
-    else
-      route.add_station(station)
-      route.list_stations
-    end
+  def menu_wagons_list
+    MENU_WAGONS.each {|key, value| puts "#{key}: #{value}"}
   end
 
-  def remove_station_route(route_number, name)
-    station = @stations_list.detect {|station| station.name == name}
-    route = @routes_list[route_number - 1]
-    if station.nil? && routes_list[route_number - 1].nil?
-      puts PUTS_LIST[14]
-    else
-      route.remove_station(station)
-      route.list_stations
-    end
+  def input_choice
+    print "Enter your choice: "
   end
 
-  def get_route(number, route_number)
-    train = @trains_list[number - 1]
-    route = @routes_list[route_number - 1]
-    if train.nil? && route.nil?
-      puts PUTS_LIST[16]
-    else
-      train.take_route(route)
-    end
+  def input_station
+    print "Enter station name: "
   end
 
-  def add_car (number)
-    train = @trains_list[number - 1]
-    if train.nil?
-      puts PUTS_LIST[17]
-    elsif train.instance_of? CargoTrain
-      train.add_wagon(CargoWagon.new)
-    elsif train.instance_of? PassTrain
-      train.add_wagon(PassWagon.new)
-    end
+  def exist_station?(name)
+    @stations_list.detect { |station| station.name == name }
   end
 
-  def remove_car(number)
-    train = @trains_list[number - 1]
-    if train.nil?
-      puts PUTS_LIST[17]
-    elsif train.wagons.empty?
-      puts PUTS_LIST[18]
-    else
-      train.remove_wagon(train.wagons.last)
-    end
+  def exist_station_message(name)
+    puts "Station #{name} already exist!"
   end
 
-  def move_forward(number)
-    train = @trains_list[number - 1]
-    if train.nil?
-      puts PUTS_LIST[17]
-    else
-      train.forward
-    end
-  end
-
-  def move_back(number)
-    train = @trains_list[number - 1]
-    if train.nil?
-      puts PUTS_LIST[17]
-    else
-      train.back
-    end
+  def station_create_message(name)
+    puts "Station #{name} has been created!"
   end
 
   def watch_stations
     @stations_list.each {|station| puts "#{station.name}"}
   end
 
-  def watch_trains(name)
-    station = @stations_list.detect {|station| station.name == name}
-    station.list_train
+  def input_train
+    print "Enter train number: "
   end
 
-  def watch_all_trains
+  def input_type
+    print "Enter type 'cargo' or 'pass': "
+  end
+
+  def exist_train?(number)
+      @trains_list.detect { |train| train.number == number }
+  end
+
+  def exist_train_message(number)
+    puts "Train #{number} already exist!"
+  end
+
+  def create_train_type(number, type)
+    if type == "cargo"
+      @trains_list << CargoTrain.new(number)
+    elsif type == "pass"
+      @trains_list << PassTrain.new(number)
+    else
+      puts "Error, you must enter 'cargo' or 'pass'!"
+    end
+  end
+  
+  def train_create_message(number)
+    puts "Train #{number} has been created!"
+  end
+
+  def all_train_list
     @trains_list.each {|train| puts "#{train.number} #{train.type}"}
   end
 
-  def watch_routes
-    @routes_list.each {|route| puts "#{route.stations}"}
+  def input_first_station
+    print "Enter first station: "
   end
+
+  def input_last_station
+    print "Enter last station: "
+  end
+
+  def first_station(from)
+    @stations_list.detect {|station| station.name == from}
+  end
+
+  def last_station(to)
+    @stations_list.detect {|station| station.name == to}
+  end
+
+  def no_station_message
+    puts "No station! First create station."
+  end
+
+  def route_create_message(from, to)
+    puts "Route '#{from} - #{to}' has been created!"
+  end
+
+  def all_routes_list
+    @routes_list.each  do |route|
+      index = @routes_list.index(route) + 1
+      puts "#{index}: '#{route.stations.first.name} - #{route.stations.last.name}'"
+    end
+  end
+
+  def input_route_numbre
+    print "Enter route number: "
+  end
+
+  def no_train_message
+    puts "No train! First create train."
+  end
+
+  def no_route_message
+    puts "No route! First create route."
+  end
+
+  def create_wagon(number)
+    train = exist_train?(number)
+    if train.type == "cargo"
+      @wagons_list << CargoWagon.new
+    elsif train.type == "pass"
+      @wagon_list << PassWagon.new
+    end
+  end
+
+  def train_no_route_message(number)
+    puts "Train #{train.number} does not have route!"
+  end
+  
+
+  def no_wagons_message
+    puts "No wagons at train!"
+  end
+
+  def error_message
+    puts "Enter another value"
+  end
+  
+
 end

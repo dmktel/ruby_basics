@@ -1,17 +1,12 @@
 require_relative 'station'
 require_relative 'route'
 require_relative 'train'
-require_relative 'cargotrain'
-require_relative 'passtrain'
+require_relative 'cargo_train'
+require_relative 'pass_train'
 require_relative 'wagon'
-require_relative 'cargowagon'
-require_relative 'passwagon'
+require_relative 'cargo_wagon'
+require_relative 'pass_wagon'
 require_relative 'interface'
+require_relative 'start'
 
-
-class Menu
-  attr_reader :interface
-  def initialize
-    @interface = Interface.new
-  end
-end
+Start.new.run

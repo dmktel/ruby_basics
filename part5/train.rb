@@ -22,9 +22,9 @@ class Train
     end
   end
 
-  def remove_wagon(wagon)
+  def remove_wagon
     if @speed == 0 && @wagons != []
-      @wagons.delete(wagon)
+      @wagons.delete_at(-1)
     end
   end
 

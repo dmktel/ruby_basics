@@ -1,3 +1,0 @@
-class PassWagon < Wagon
-
-end
