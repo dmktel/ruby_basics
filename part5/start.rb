@@ -6,7 +6,7 @@ class Start
 
   def run
     loop do
-      @interface.menu_list
+      @interface.menu(:list)
       @interface.input_choice
       choice = gets.to_i
       case choice
@@ -28,7 +28,7 @@ class Start
 
   def menu_stations
     loop do
-      @interface.menu_stations_list
+      @interface.menu(:stations)
       @interface.input_choice
       choice = gets.to_i
       case choice
@@ -48,7 +48,7 @@ class Start
 
   def menu_trains
     loop do
-      @interface.menu_trains_list
+      @interface.menu(:trains)
       @interface.input_choice
       choice = gets.to_i
       case choice
@@ -93,7 +93,7 @@ class Start
 
   def menu_routes
     loop do
-      @interface.menu_routes_list
+      @interface.menu(:routes)
       @interface.input_choice
       choice = gets.to_i
       case choice
@@ -133,7 +133,7 @@ class Start
 
   def menu_wagons
     loop do
-      @interface.menu_wagons_list
+      @interface.menu(:wagons)
       @interface.input_choice
       choice = gets.to_i
       case choice
@@ -163,7 +163,7 @@ class Start
 
 
   def create_station(name)
-    if @interface.exist_station?(name)
+    if exist_station?(name)
       @interface.exist_station_message(name)
     else
       @interface.stations_list << Station.new(name)
@@ -172,7 +172,7 @@ class Start
   end
 
   def create_train(number, type)
-    if @interface.exist_train?(number)
+    if exist_train?(number)
        @interface.exist_train_message(number)
     else
        @interface.create_train_type(number, type)
@@ -181,8 +181,10 @@ class Start
   end
 
   def create_route(from, to)
-    first_station = @interface.first_station(from)
-    last_station = @interface.last_station(to)
+    name = from
+    first_station = exist_station?(name)
+    name = to
+    last_station = exist_station?(name)
     if first_station.nil? && last_station.nil?
       @interface.no_station_message
       menu_stations
@@ -194,7 +196,7 @@ class Start
 
   def add_station_route(route_number, name)
     route = @interface.routes_list[route_number - 1]
-    station = @interface.exist_station?(name)
+    station = exist_station?(name)
     if route.nil?
       @interface.no_route_message
       menu_routes
@@ -209,7 +211,7 @@ class Start
 
   def remove_station_route(route_number, name)
     route = @interface.routes_list[route_number - 1]
-    station = @interface.exist_station?(name)
+    station = exist_station?(name)
     if route.nil?
       @interface.no_route_message
       menu_routes
@@ -223,7 +225,7 @@ class Start
   end
  
   def get_route(number, route_number)
-    train = @interface.exist_train?(number)
+    train = exist_train?(number)
     route = @interface.routes_list[route_number - 1]
     if train.nil?
       @interface.no_train_message
@@ -237,7 +239,7 @@ class Start
   end
 
   def move_forward(number)
-    train = @interface.exist_train?(number)
+    train = exist_train?(number)
     if train.nil?
       @interface.no_train_message
       menu_trains
@@ -250,7 +252,7 @@ class Start
   end
 
   def move_back(number)
-    train = @interface.exist_train?(number)
+    train = exist_train?(number)
     if train.nil?
       @interface.no_train_message
       menu_trains
@@ -263,23 +265,26 @@ class Start
   end
 
   def trains_station_list(name)
-    station = @interface.stations_list.detect {|station| station.name == name}
+    station = exist_station?(name)
     station.list_train
   end
 
   def add_wagon_train(number)
-    train = @interface.exist_train?(number)
+    train = exist_train?(number)
     if train.nil?
       @interface.no_train_message
       menu_trains
-    else
-      wagon = @interface.create_wagon(number)
+    elsif train.type == :cargo
+      wagon = CargoWagon.new
+      train.add_wagon(wagon)
+    elsif train.type == :pass
+      wagon = PassWagon.new
       train.add_wagon(wagon)
     end
   end
 
   def remove_wagon_train(number)
-    train = @interface.exist_train?(number)
+    train = exist_train?(number)
     if train.nil?
       @interface.no_train_message
       menu_trains
@@ -291,15 +296,22 @@ class Start
   end
 
   def wagons_counter(number)
-    train = @interface.exist_train?(number)
+    train = exist_train?(number)
     if train.nil?
       @interface.no_train_message
       menu_trains
     else
-      count = train.wagons.count
+      count = train.wagons.length
       puts "Train #{train.number} has #{count} wagons"
     end
+  end
 
+  def exist_train?(number)
+    @interface.trains_list.detect { |train| train.number == number }
+  end
+
+  def exist_station?(name)
+    @interface.stations_list.detect { |station| station.name == name }
   end
 
 end
