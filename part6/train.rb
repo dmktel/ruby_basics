@@ -1,17 +1,13 @@
-require_relative 'manufacturer_module'
+require_relative 'manufacturer'
 require_relative 'instance_counter'
 
 class Train
   include InstanceCounter
   include Manufacturer
   attr_reader :speed, :number, :route, :type, :wagons
-  @@trains = []
+  @@trains = Hash.new
   def self.find(number)
-    if number.nil?
-      puts "Train doesn't exist!"
-    else
-      @@trains.detect {|train| train.number == number}
-    end
+    @@trains[number]
   end
   
   def initialize(number, type)
@@ -19,7 +15,7 @@ class Train
     @speed = 0
     @type = type
     @wagons = []
-    @@trains << self
+    @@trains[number] = self
     register_instance
   end
 

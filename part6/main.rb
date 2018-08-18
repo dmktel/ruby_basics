@@ -8,6 +8,7 @@ require_relative 'cargo_wagon'
 require_relative 'pass_wagon'
 require_relative 'interface'
 require_relative 'start'
-require_relative 'manufacturer_module'
+require_relative 'manufacturer'
+require_relative 'instance_counter'
 
 Start.new.run
