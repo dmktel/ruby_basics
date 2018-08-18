@@ -1,6 +1,6 @@
 class Interface
-
   attr_reader :stations_list, :trains_list, :routes_list, :wagons_list
+  
   def initialize
     @stations_list = []
     @trains_list = []

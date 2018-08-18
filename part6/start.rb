@@ -1,5 +1,4 @@
 class Start
-
   def initialize
     @interface = Interface.new
   end

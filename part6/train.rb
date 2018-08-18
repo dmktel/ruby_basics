@@ -4,8 +4,10 @@ require_relative 'instance_counter'
 class Train
   include InstanceCounter
   include Manufacturer
+
   attr_reader :speed, :number, :route, :type, :wagons
-  @@trains = Hash.new
+  @@trains = {}
+  
   def self.find(number)
     @@trains[number]
   end

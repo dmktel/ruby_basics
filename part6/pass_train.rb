@@ -2,6 +2,7 @@ class PassTrain < Train
   def initialize(number)
     super(number, :pass)
   end
+
   def add_wagon(wagon)
     if wagon.instance_of?(PassWagon)
       super(wagon)
