@@ -178,7 +178,6 @@ class Start
        @interface.exist_train_message(number)
     else
        @interface.create_train_type(number, type)
-       @interface.train_create_message(number)
     end
   end
 
