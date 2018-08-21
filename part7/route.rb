@@ -5,12 +5,13 @@ class Route
   include InstanceCounter
   include Valid
 
-  NAME_FORMAT = /^[a-zA-Z]$/i
+  NAME_FORMAT = /^[a-zA-Z]+$/i
 
   attr_reader :stations, :from, :to
 
   def initialize(from, to)
     @stations = [from, to]
+    validate!
     register_instance
   end
 
@@ -34,10 +35,10 @@ class Route
 protected
 
   def validate!
-    raise "Station name can't be blank!" if from.nil? && to.nil?
-    raise "Station name can't be at least 2 symbols" if from.length < 2 && to.length < 2
-    raise "You need to use English alphabet!" if from !~ NAME_FORMAT && to !~ NAME_FORMAT
-    true
+    raise "Station name can't be blank!" if @stations.first.name.nil? || @stations.first.name.empty? || @stations.last.name.nil? || @stations.last.name.empty?
+    raise "Station name can't be at least 2 symbols" if @stations.first.name.length < 2 && @stationS.last.name.length < 2
+    raise "Stations names 'from' and 'to' can't be the same!" if @stations.first.name == @stations.last.name
+    raise "You need to use English alphabet!" if @stations.first.name !~ NAME_FORMAT || @stations.last.name !~ NAME_FORMAT
   end
 
 end

@@ -5,7 +5,7 @@ class Station
   include InstanceCounter
   include Valid
 
-  NAME_FORMAT = /^[a-zA-Z]$/i
+  NAME_FORMAT = /^[a-zA-Z]+$/i
 
   attr_reader :name, :trains
   @@stations = []
@@ -37,10 +37,9 @@ class Station
   protected
 
   def validate!
-    raise "Station name can't be blank!" if name.nil?
+    raise "Station name can't be blank!" if name.nil? || name.empty?
     raise "Station name can't be at least 2 symbols" if name.length < 2
     raise "You need to use English alphabet!" if name !~ NAME_FORMAT
-    true
   end
 
 end

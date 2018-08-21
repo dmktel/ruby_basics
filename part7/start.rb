@@ -52,11 +52,16 @@ class Start
       choice = gets.to_i
       case choice
       when 1
-        @interface.input_train
-        number = gets.to_i
-        @interface.input_type
-        type = gets.chomp
-        create_train(number, type)
+        begin
+          @interface.input_train
+          number = gets.chomp
+          @interface.input_type
+          type = gets.chomp
+          create_train(number, type)
+        rescue RuntimeError => e
+          puts e.inspect
+          retry
+        end
       when 2
         @interface.all_train_list
         @interface.input_train
