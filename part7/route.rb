@@ -5,8 +5,6 @@ class Route
   include InstanceCounter
   include Valid
 
-  NAME_FORMAT = /^[a-zA-Z]+$/i
-
   attr_reader :stations
 
   def initialize(from, to)
@@ -35,11 +33,17 @@ class Route
 protected
 
   def validate!
-    raise "Can't add same stations twice" if same_stations
+    raise "Input isn't the type of Station" unless check_class!(stations.first)
+    raise "Input isn't the type of Station" unless check_class!(stations.last)
+    raise "Can't add same stations twice" if check_equal!
   end
 
-  def same_stations
-    @stations.first.name == @stations.last.name
+  def check_class!(station)
+    station.instance_of?(Station)
+  end
+
+  def check_equal!
+    @stations.first == @stations.last
   end
 
 end
