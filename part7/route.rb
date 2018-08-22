@@ -7,7 +7,7 @@ class Route
 
   NAME_FORMAT = /^[a-zA-Z]+$/i
 
-  attr_reader :stations, :from, :to
+  attr_reader :stations
 
   def initialize(from, to)
     @stations = [from, to]
@@ -35,10 +35,11 @@ class Route
 protected
 
   def validate!
-    raise "Station name can't be blank!" if @stations.first.name.nil? || @stations.first.name.empty? || @stations.last.name.nil? || @stations.last.name.empty?
-    raise "Station name can't be at least 2 symbols" if @stations.first.name.length < 2 && @stationS.last.name.length < 2
-    raise "Stations names 'from' and 'to' can't be the same!" if @stations.first.name == @stations.last.name
-    raise "You need to use English alphabet!" if @stations.first.name !~ NAME_FORMAT || @stations.last.name !~ NAME_FORMAT
+    raise "Can't add same stations twice" if same_stations
+  end
+
+  def same_stations
+    @stations.first.name == @stations.last.name
   end
 
 end

@@ -86,7 +86,7 @@ class Train
     raise "Train number can't be blank!" if number.nil?
     raise "Wrong train format! Use (ххххх or ххх-хх)" if number !~ NUMBER_FORMAT
     raise "Train type can't be blank!" if type.empty?
-    raise "You need to input 'cargo' or 'pass'" unless ['cargo', 'pass'].include?(type)
+    raise "You need to input 'cargo' or 'pass'" unless [:cargo, :pass].include?(type)
   end
 
 end

@@ -70,7 +70,7 @@ class Interface
   end
 
   def input_train
-    print "Enter train number: "
+    print "Enter train number 'xxxxx' or 'xxx-xx': "
   end
 
   def input_type
@@ -92,7 +92,7 @@ class Interface
   end
 
 
-  def train_create_message(number)
+  def train_create_message
     puts "Train #{number} has been created!"
   end
 
