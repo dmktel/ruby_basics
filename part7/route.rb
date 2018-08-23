@@ -33,16 +33,16 @@ class Route
 protected
 
   def validate!
-    raise "Input isn't the type of Station" unless check_class!(stations.first)
-    raise "Input isn't the type of Station" unless check_class!(stations.last)
-    raise "Can't add same stations twice" if check_equal!
+    raise "Input isn't the type of Station" unless suitable_class?(stations.first)
+    raise "Input isn't the type of Station" unless suitable_class?(stations.last)
+    raise "Can't add same stations twice" if initial_stations_match?
   end
 
-  def check_class!(station)
+  def suitable_class?(station)
     station.instance_of?(Station)
   end
 
-  def check_equal!
+  def initial_stations_match?
     @stations.first == @stations.last
   end
 
