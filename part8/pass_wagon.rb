@@ -1,19 +1,16 @@
 class PassWagon < Wagon
-  attr_reader :filled
 
   def initialize(volume)
-    @volume = volume
-    @filled = 0
-    super(:pass)
+    super(:pass, volume)
   end
 
-  def load_pass(amount)
+  def load(amount = 1)
     raise "No free places!" if @filled == @volume
-    @filled += 1
+    super(amount)
   end
 
   def free
-    @volume - @filled
+    super
   end
 
 end

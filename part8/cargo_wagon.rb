@@ -1,19 +1,16 @@
 class CargoWagon < Wagon
-  attr_reader :filled
 
-  def initialize (volume)
-    @volume = volume
-    @filled = 0
-    super(:cargo)
+  def initialize(volume)
+    super(:cargo, volume)
   end
 
-  def load_cargo(amount)
+  def load(amount)
     raise "No free volume!" if @filled + amount > @volume
-    @filled += amount
+    super(amount)
   end
 
   def free
-    @volume - @filled
+    super
   end
 
 end

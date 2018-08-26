@@ -348,9 +348,9 @@ class Start
      elsif train.type == :cargo
       @interface.wagon_volume_input
       volume = gets.to_i
-      wagon.load_cargo(volume)
+      wagon.load(volume)
      elsif train.type == :pass
-      wagon.load_pass(volume)
+      wagon.load(volume = 1)
      end
     end
   end
