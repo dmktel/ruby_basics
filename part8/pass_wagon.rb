@@ -6,7 +6,7 @@ class PassWagon < Wagon
 
   def load
     raise "No free places!" if @filled == @volume
-    super(amount = 1)
+    super(1)
   end
 
 end
