@@ -80,7 +80,7 @@ class Train
     route.stations[@current_station_index - 1] if @current_station_index > 0
   end
 
-  def iterate_wagons(&block)
+  def iterate_wagons
     @wagons.each{ |wagon| yield(wagon) }
   end
 

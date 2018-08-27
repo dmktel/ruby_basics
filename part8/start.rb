@@ -341,17 +341,17 @@ class Start
       @interface.no_wagons_message
       menu_wagons
     else
-     wagon = train.wagons.detect { |wagon| train.wagons.index(wagon) + 1 == index }
-     if wagon.nil?
-      @interface.error_message
-      menu_wagons
-     elsif train.type == :cargo
-      @interface.wagon_volume_input
-      volume = gets.to_i
-      wagon.load(volume)
-     elsif train.type == :pass
-      wagon.load(volume = 1)
-     end
+      wagon = train.wagons.detect { |wagon| train.wagons.index(wagon) + 1 == index }
+      if wagon.nil?
+        @interface.error_message
+        menu_wagons
+      elsif train.type == :cargo
+        @interface.wagon_volume_input
+        volume = gets.to_i
+        wagon.load(volume)
+      elsif train.type == :pass
+        wagon.load
+      end
     end
   end
 

@@ -4,13 +4,9 @@ class PassWagon < Wagon
     super(:pass, volume)
   end
 
-  def load(amount = 1)
+  def load
     raise "No free places!" if @filled == @volume
-    super(amount)
-  end
-
-  def free
-    super
+    super(amount = 1)
   end
 
 end

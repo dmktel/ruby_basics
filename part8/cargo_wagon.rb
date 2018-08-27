@@ -9,8 +9,4 @@ class CargoWagon < Wagon
     super(amount)
   end
 
-  def free
-    super
-  end
-
 end

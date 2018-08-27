@@ -34,7 +34,7 @@ class Station
     trains.each { |train| puts "#{train.number} #{train.type}" }
   end
 
-  def iterate_trains(&block)
+  def iterate_trains
     @trains.each{ |train| yield(train) }
   end
 
