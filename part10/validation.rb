@@ -7,17 +7,19 @@ module Validation
   module ClassMethods
     attr_accessor :check
 
-    def validate(*args)
-      args ||= []
+    def validate(name, val_type, param = nil)
       self.check ||= []
-      self.check.push(args)
+      self.check << { attr: name, val_type: val_type, param: param }
     end
   end
 
   module InstanceMethods
     def validate!
-      self.class.check.each { |arg| self.send arg[1].to_sym,\
-         instance_variable_get("@#{arg[0]}".to_sym), arg[2] }
+      self.class.check.each do |item|
+        value = instance_variable_get("@#{item[:attr]}".to_sym)
+        name_val = ('val_' + item[:val_type].to_s).to_sym
+        self.send(name_val, item[:attr], value, item[:param])
+      end
     end
 
     def valid?
@@ -29,21 +31,21 @@ module Validation
 
     protected
 
-    def presence(value, var)
+    def val_presence(name, value, param)
       raise 'Input can not be blank!' if value.nil? || value.empty?
     end
 
-    def format(value, var)
-      raise 'Bad format input!' if value !~ var
+    def val_format(name, value, format_val)
+      raise 'Bad format input!' if value !~ format_val
     end
 
-    def kind(value, var)
-      raise 'Another class!' if value.first.instance_of?(var) ||\
-      value.last.instance_of?(var)
+    def val_type(name, value, type_val)
+      raise 'Another class!' unless value.instance_of?(type_val)
     end
 
-    def same(value, var)
-      raise 'Can not add same stations twice' if value.first == value.last
+    def val_kind(name, value, kind_val)
+      all_checking = value.all? { |item| item.instance_of?(kind_val)}
+      raise "Inputs are different class!" unless all_checking
     end
   end
 end

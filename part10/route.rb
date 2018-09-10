@@ -9,7 +9,7 @@ class Route
 
   attr_reader :stations
   validate :stations, :kind, Station
-  validate :stations, :same
+
   def initialize(from, to)
     @stations = [from, to]
     validate!

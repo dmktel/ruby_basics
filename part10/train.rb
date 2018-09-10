@@ -17,8 +17,9 @@ class Train
     @@trains[number]
   end
 
-  def initialize(number)
+  def initialize(number,type)
     @number = number
+    @type = type
     @speed = 0
     @wagons = []
     validate!

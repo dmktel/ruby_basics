@@ -1,4 +1,5 @@
 class PassWagon < Wagon
+
   def initialize(volume)
     super(:pass, volume)
   end

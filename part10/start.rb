@@ -209,11 +209,11 @@ class Start
   end
 
   def create_route_new(from, to)
-   # if exist_station?(from).nil? && exist_station?(to).nil?
-   #   station_nil
-   # else
+    if exist_station?(from).nil? && exist_station?(to).nil?
+      station_nil
+    else
       route_new(from, to)
-  #  end
+    end
   end
 
   def route_new(from, to)

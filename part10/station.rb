@@ -5,12 +5,13 @@ require_relative 'accessors'
 class Station
   include InstanceCounter
   include Validation
-  include Acсessors
-
+  extend Acсessors
+  attr_accessor_with_history :name
   attr_reader :name, :trains
-  @@stations = []
   validate :name, :presence
   validate :name, :format, /^[a-zA-Z]+$/i
+  @@stations = []
+
 
   def self.all
     @@stations

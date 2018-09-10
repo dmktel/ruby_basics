@@ -5,8 +5,7 @@ class CargoTrain < Train
   validate :number, :format, /^[a-z0-9]{3}-?[a-z0-9]{2}$/i
 
   def initialize(number)
-    super(number)
-    @type = :cargo
+    super(number, :cargo)
   end
 
   def add_wagon(wagon)
