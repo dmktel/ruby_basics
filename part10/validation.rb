@@ -31,7 +31,7 @@ module Validation
 
     protected
 
-    def val_presence(name, value, param)
+    def val_presence(name, value, _param)
       raise 'Input can not be blank!' if value.nil? || value.empty?
     end
 
