@@ -5,10 +5,11 @@ module Acсessors
       var_history = "@#{name}_history".to_sym
       define_method(name) { instance_variable_get(var_name) }
       define_method("#{name}=".to_sym) do |value|
-        instance_variable_set(var_name, value)
         @history = instance_variable_get(var_history) || []
-        last_value = instance_variable_get(var_name)
-        instance_variable_set(var_history, @history << last_value )
+        previos_value = instance_variable_get(var_name)
+        return unless previos_value
+        instance_variable_set(var_history, @history << previos_value )
+        instance_variable_set(var_name, value)
       end
       define_method("#{name}_history") {instance_variable_get(var_history)}
     end

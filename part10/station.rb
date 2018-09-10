@@ -12,7 +12,6 @@ class Station
   validate :name, :format, /^[a-zA-Z]+$/i
   @@stations = []
 
-
   def self.all
     @@stations
   end

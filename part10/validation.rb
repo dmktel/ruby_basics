@@ -5,17 +5,17 @@ module Validation
   end
 
   module ClassMethods
-    attr_accessor :check
+    attr_accessor :validations
 
     def validate(name, val_type, param = nil)
-      self.check ||= []
-      self.check << { attr: name, val_type: val_type, param: param }
+      self.validations ||= []
+      self.validations << { attr: name, val_type: val_type, param: param }
     end
   end
 
   module InstanceMethods
     def validate!
-      self.class.check.each do |item|
+      self.class.validations.each do |item|
         value = instance_variable_get("@#{item[:attr]}".to_sym)
         name_val = ('val_' + item[:val_type].to_s).to_sym
         self.send(name_val, item[:attr], value, item[:param])
