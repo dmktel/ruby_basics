@@ -32,7 +32,9 @@ module Validation
     protected
 
     def val_presence(value, _param)
-      raise 'Input can not be blank!' if value.nil? || value.empty?
+      if value.nil? || value.is_a?(String) && value.empty?
+        raise 'Input can not be blank!'
+      end
     end
 
     def val_format(value, format_val)
