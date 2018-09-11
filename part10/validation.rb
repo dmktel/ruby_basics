@@ -16,9 +16,9 @@ module Validation
   module InstanceMethods
     def validate!
       self.class.validations.each do |item|
-        value = instance_variable_get("@#{item[:attr]}".to_sym)
+        value = instance_variable_get("@#{item[:attr]}")
         name_val = ('val_' + item[:val_type].to_s).to_sym
-        self.send(name_val, item[:attr], value, item[:param])
+        send(name_val, value, item[:param])
       end
     end
 
@@ -31,19 +31,19 @@ module Validation
 
     protected
 
-    def val_presence(name, value, _param)
+    def val_presence(value, _param)
       raise 'Input can not be blank!' if value.nil? || value.empty?
     end
 
-    def val_format(name, value, format_val)
-      raise 'Bad format input!' if value !~ format_val
+    def val_format(value, format_val)
+      raise 'Bad format input!' if value.to_s !~ format_val
     end
 
-    def val_type(name, value, type_val)
+    def val_type(value, type_val)
       raise 'Another class!' unless value.instance_of?(type_val)
     end
 
-    def val_kind(name, value, kind_val)
+    def val_kind(value, kind_val)
       all_checking = value.all? { |item| item.instance_of?(kind_val)}
       raise "Inputs are different class!" unless all_checking
     end
